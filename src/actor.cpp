@@ -32,12 +32,23 @@ void Actor::ProcessInput(const u8 *keyStates)
     component->ProcessInput(keyStates);
 }
 
-void Actor::AddComponent(class Component *component)
+void Actor::AddComponent(Component *component)
 {
+  i32 order{component->GetUpdateOrder()};
+  auto it{mComponents.begin()};
+  for (; it != mComponents.end(); ++it)
+  {
+    if (order < (*it)->GetUpdateOrder())
+      break;
+  }
+  mComponents.insert(it, component);
 }
 
-void Actor::RemoveComponent(class Component *component)
+void Actor::RemoveComponent(Component *component)
 {
+  auto it{std::find(mComponents.begin(), mComponents.end(), component)};
+  if (it != mComponents.end())
+    mComponents.erase(it);
 }
 
 void Actor::UpdateComponents(f32 deltaTime)

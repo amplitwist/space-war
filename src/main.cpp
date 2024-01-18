@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-  Game game;
+  Game game{std::filesystem::path(argv[0]).parent_path()};
 
   if (game.Init())
     game.Run();

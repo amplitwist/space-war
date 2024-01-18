@@ -1,10 +1,14 @@
 #include "inc/game.hpp"
 
 #include "inc/actor.hpp"
+#include "inc/star.hpp"
+#include "inc/sprite_component.hpp"
 
 #include <algorithm>
+#include <fstream>
 
-Game::Game()
+Game::Game(std::filesystem::path parentPath)
+: mAssetsPath{parentPath/"assets"}
 {
 }
 
@@ -39,11 +43,12 @@ bool Game::Init()
   if (!mRenderer)
     return false;
 
-  return true;
+  return LoadData();
 }
 
 void Game::Deinit()
 {
+  UnloadData();
   SDL_DestroyRenderer(mRenderer);
   SDL_DestroyWindow(mWindow);
   SDL_Quit();
@@ -81,6 +86,41 @@ void Game::RemoveActor(Actor *actor)
     std::iter_swap(it, mActors.end() - 1);
     mActors.pop_back();
   }
+}
+
+void Game::AddSprite(SpriteComponent *sprite)
+{
+  auto comp{[] (SpriteComponent *a, SpriteComponent *b) {
+    return a->GetDrawOrder() < b->GetDrawOrder();
+  }};
+  auto it{std::lower_bound(mSprites.begin(), mSprites.end(), sprite, comp)};
+  mSprites.insert(it, sprite);
+}
+
+bool Game::LoadTexture(std::string name)
+{
+  //std::ifstream file{mAssetsPath/"textures"/name};
+  //if (!file.is_open()) return false;
+  //std::filesystem::path path{mAssetsPath/"textures"/name};
+  mAssetsPath = "assets";
+  SDL_Surface *surface{SDL_LoadBMP((mAssetsPath/"sprites"/name).string().c_str())};
+  mTextureMap[name] = SDL_CreateTextureFromSurface(mRenderer, surface);
+  SDL_FreeSurface(surface);
+  if (!mTextureMap[name]) return false;
+  return true;
+}
+
+#define RETURN_IF_FALSE(x) \
+do { if (!(x)) return false; } while (0)
+
+bool Game::LoadData()
+{
+  RETURN_IF_FALSE(LoadTexture("star.bmp"));
+  return true;
+}
+
+void Game::UnloadData()
+{
 }
 
 void Game::ProcessInput()
@@ -130,10 +170,16 @@ void Game::Update(f32 deltaTime)
     delete actor;
 }
 
+void DrawSprite(SpriteComponent *sprite)
+{
+
+}
+
 void Game::Render()
 {
   SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0);
   SDL_RenderClear(mRenderer);
-  /* ... */
+  for (auto sprite : mSprites)
+    DrawSprite(sprite);
   SDL_RenderPresent(mRenderer);
 }
