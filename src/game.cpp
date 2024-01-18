@@ -47,8 +47,6 @@ void Game::Deinit()
 
 void Game::Run()
 {
-  mIsRunning = true;
-
   while (mIsRunning)
   {
     ProcessInput();
@@ -66,4 +64,9 @@ void Game::ProcessInput()
         break;
     }
   }
+
+  const Uint8 *keys{SDL_GetKeyboardState(nullptr)};
+
+  if (keys[SDL_SCANCODE_ESCAPE])
+    mIsRunning = false;
 }

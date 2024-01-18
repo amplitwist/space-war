@@ -21,10 +21,10 @@ public:
 private:
   void ProcessInput();
 
-  SDL_Window *mWindow;
-  SDL_Renderer *mRenderer;
+  SDL_Window *mWindow{nullptr};
+  SDL_Renderer *mRenderer{nullptr};
 
-  bool mIsRunning;
+  bool mIsRunning{true};
 
   std::vector<Actor*> mActors;
 };
