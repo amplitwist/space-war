@@ -1,6 +1,8 @@
+#include <SDL.h>
+
 #include "inc/game.hpp"
 
-int main()
+int main(int argc, char *argv[])
 {
   Game game;
 
@@ -8,5 +10,6 @@ int main()
     game.Run();
 
   game.Deinit();
+
   return 0;
 }
