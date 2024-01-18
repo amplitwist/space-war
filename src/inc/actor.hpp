@@ -2,6 +2,7 @@
 #define ACTOR_HPP
 
 #include "types.hpp"
+#include "vector2.hpp"
 
 #include <vector>
 
@@ -30,6 +31,8 @@ public:
   void AddComponent(class Component *component);
   void RemoveComponent(class Component *component);
 
+  Vector2 GetPosition() const { return mPosition; }
+
 private:
   void UpdateComponents(f32 deltaTime);
   virtual void VUpdate(f32 deltaTime);
@@ -41,6 +44,8 @@ private:
   State mState{State::kActive};
 
   std::vector<class Component*> mComponents;
+
+  Vector2 mPosition;
 };
 
 #endif //ACTOR_HPP

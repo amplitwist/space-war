@@ -6,18 +6,23 @@
 
 #include <SDL.h>
 
+#include <string_view>
+
 class SpriteComponent : public Component
 {
 public:
-  SpriteComponent(Actor *owner, int drawOrder = 100);
+  SpriteComponent(Actor *owner, std::string name, int drawOrder = 100);
   ~SpriteComponent();
 
   virtual void SetTexture(SDL_Texture *texture);
 
-  int GetDrawOrder() const { return mDrawOrder; }
+  std::string GetName() const { return mName; }
+  i32 GetDrawOrder() const { return mDrawOrder; }
 
 private:
+  std::string mName;
   int mDrawOrder;
+
   SDL_Texture *mTexture{nullptr};
   i32 mWidth{0};
   i32 mHeight{0};

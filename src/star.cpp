@@ -2,9 +2,9 @@
 #include "inc/sprite_component.hpp"
 
 Star::Star(class Game *game)
-: Actor(game)
+: Actor{game}
 {
-  new SpriteComponent{this, 150};
+  new SpriteComponent{this, "star.bmp", 150};
 }
 
 Star::~Star()

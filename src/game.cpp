@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 
 Game::Game(std::filesystem::path parentPath)
 : mAssetsPath{parentPath/"assets"}
@@ -103,7 +104,9 @@ bool Game::LoadTexture(std::string name)
   //if (!file.is_open()) return false;
   //std::filesystem::path path{mAssetsPath/"textures"/name};
   mAssetsPath = "assets";
+  std::cout << "loading sprite " << (mAssetsPath/"sprites"/name).string().c_str() << std::endl;
   SDL_Surface *surface{SDL_LoadBMP((mAssetsPath/"sprites"/name).string().c_str())};
+  std::cout << surface << '\n';
   mTextureMap[name] = SDL_CreateTextureFromSurface(mRenderer, surface);
   SDL_FreeSurface(surface);
   if (!mTextureMap[name]) return false;
@@ -116,6 +119,7 @@ do { if (!(x)) return false; } while (0)
 bool Game::LoadData()
 {
   RETURN_IF_FALSE(LoadTexture("star.bmp"));
+  new Star{this};
   return true;
 }
 
@@ -170,9 +174,17 @@ void Game::Update(f32 deltaTime)
     delete actor;
 }
 
-void DrawSprite(SpriteComponent *sprite)
+void Game::DrawSprite(SpriteComponent *sprite)
 {
-
+  Actor *actor{sprite->GetOwner()};
+  SDL_Texture *texture{mTextureMap[sprite->GetName()]};
+  SDL_Rect rect;
+  SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h);
+  rect.w *= 0.7f;
+  rect.h *= 0.7f;
+  rect.x = actor->GetPosition().x;
+  rect.y = actor->GetPosition().y;
+  SDL_RenderCopyEx(mRenderer, texture, nullptr, &rect, 0.0, nullptr, SDL_FLIP_NONE);
 }
 
 void Game::Render()
@@ -180,6 +192,9 @@ void Game::Render()
   SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0);
   SDL_RenderClear(mRenderer);
   for (auto sprite : mSprites)
+  {
+    
     DrawSprite(sprite);
+  }
   SDL_RenderPresent(mRenderer);
 }

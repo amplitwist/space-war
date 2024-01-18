@@ -29,6 +29,7 @@ public:
   bool LoadTexture(std::string name);
 
   void AddSprite(class SpriteComponent *sprite);
+  void DrawSprite(class SpriteComponent *sprite);
 
 private:
   bool LoadData();

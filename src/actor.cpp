@@ -5,6 +5,7 @@
 
 Actor::Actor(Game *game)
 : mGame{game}
+, mPosition{0.0f, 0.0f}
 {
   mGame->AddActor(this);
 }

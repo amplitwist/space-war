@@ -15,6 +15,8 @@ public:
 
   i32 GetUpdateOrder() const { return mUpdateOrder; };
 
+  class Actor *GetOwner() const { return mOwner; }
+
 protected:
   class Actor *mOwner;
   i32 mUpdateOrder;

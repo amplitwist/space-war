@@ -1,10 +1,13 @@
 #include "inc/sprite_component.hpp"
+#include "inc/actor.hpp"
+#include "inc/game.hpp"
 
-SpriteComponent::SpriteComponent(Actor *owner, int drawOrder)
+SpriteComponent::SpriteComponent(Actor *owner, std::string name, int drawOrder)
 : Component{owner}
+, mName{name}
 , mDrawOrder{drawOrder}
 {
-
+  GetOwner()->GetGame()->AddSprite(this);
 }
 
 SpriteComponent::~SpriteComponent()
