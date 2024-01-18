@@ -14,7 +14,7 @@ bool Game::Init()
     return false;
 
   mWindow = SDL_CreateWindow(
-    "Game",
+    "Space War",
     SDL_WINDOWPOS_CENTERED,
     SDL_WINDOWPOS_CENTERED,
     800,
@@ -50,6 +50,8 @@ void Game::Run()
   while (mIsRunning)
   {
     ProcessInput();
+    Update();
+    Render();
   }
 }
 
@@ -69,4 +71,18 @@ void Game::ProcessInput()
 
   if (keys[SDL_SCANCODE_ESCAPE])
     mIsRunning = false;
+}
+
+void Game::Update()
+{
+  mUpdatingActors = true;
+  for (auto actor : mActors)
+    actor->Update();
+  mUpdatingActors = false;
+
+  
+}
+
+void Game::Render()
+{
 }

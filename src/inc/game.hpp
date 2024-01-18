@@ -20,6 +20,8 @@ public:
 
 private:
   void ProcessInput();
+  void Update();
+  void Render();
 
   SDL_Window *mWindow{nullptr};
   SDL_Renderer *mRenderer{nullptr};
