@@ -6,13 +6,13 @@
 class Planet : public Actor
 {
 public:
-  Planet(class Game *game, class Star *star);
+  Planet(class Game *game, Actor *primaryBody, f32 radius, f32 speed, bool is_moon = false);
   ~Planet();
 
   void VUpdate(f32 deltaTime) override;
 
 private:
-  class Star *mStar;
+  Actor *primaryBody;
 };
 
 #endif //PLANET_HPP

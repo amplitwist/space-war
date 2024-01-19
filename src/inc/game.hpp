@@ -44,6 +44,8 @@ private:
   void Update(f32 deltaTime);
   void Render();
 
+  Vector2 MakeRelativeToCamera(Vector2 position);
+
   std::filesystem::path mAssetsPath;
 
   SDL_Window *mWindow{nullptr};
@@ -59,7 +61,11 @@ private:
   std::vector<class SpriteComponent*> mSprites;
 
   Vector2 mCameraPosition;
+  i32 mCameraWidth{800};
+  i32 mCameraHeight{600};
   f32 mCameraScale{1.0f};
+
+  class Planet *mMoon;
 };
 
 #endif //GAME_HPP

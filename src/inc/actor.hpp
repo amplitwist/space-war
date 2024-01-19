@@ -34,6 +34,9 @@ public:
   Vector2 GetPosition() const { return mPosition; }
   void SetPosition(Vector2 position) { mPosition = position; }
 
+  f32 GetAngle() const { return mAngle; }
+  void SetAngle(f32 angle) { mAngle = angle; }
+
 private:
   void UpdateComponents(f32 deltaTime);
   virtual void VUpdate(f32 deltaTime);
@@ -47,6 +50,7 @@ private:
   std::vector<class Component*> mComponents;
 
   Vector2 mPosition{0.0f, 0.0f};
+  f32 mAngle{0.0f};
 };
 
 #endif //ACTOR_HPP

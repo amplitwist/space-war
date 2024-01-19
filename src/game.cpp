@@ -49,6 +49,8 @@ bool Game::Init()
   if (!mRenderer)
     return false;
 
+  //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+
   return LoadData();
 }
 
@@ -127,10 +129,13 @@ bool Game::LoadData()
   RETURN_IF_FALSE(LoadTexture("planet_1.png"));
   RETURN_IF_FALSE(LoadTexture("planet_2.png"));
   RETURN_IF_FALSE(LoadTexture("planet_3.png"));
+  RETURN_IF_FALSE(LoadTexture("moon_1.png"));
 
   new Camera{this};
   Star *star{new Star{this}};
-  new Planet{this, star};
+  Planet *planet{new Planet{this, star, 2000.0f, 0.001f}};
+  new Planet{this, planet, 300.0f, 0.01f, true};
+  mMoon = planet;
 
   return true;
 }
@@ -151,7 +156,13 @@ void Game::ProcessInput()
       case SDL_MOUSEWHEEL:
         if (event.wheel.y < 0) //scroll down
         {
+          f32 __x = event.wheel.mouseX / mCameraScale + mCameraPosition.x;
+          f32 __y = event.wheel.mouseY / mCameraScale + mCameraPosition.y;
           mCameraScale -= 0.1f;
+          f32 _x = event.wheel.mouseX / mCameraScale + mCameraPosition.x;
+          f32 _y = event.wheel.mouseY / mCameraScale + mCameraPosition.y;
+          mCameraPosition.x += _x - __x;
+          mCameraPosition.x += _y - __y;
         }
         else if (event.wheel.y > 0) //scroll up
         {
@@ -196,27 +207,77 @@ void Game::Update(f32 deltaTime)
     delete actor;
 }
 
+Vector2 Game::MakeRelativeToCamera(Vector2 position)
+{
+  return { position.x - mCameraPosition.x, position.y - mCameraPosition.y };
+}
+
+void DrawCircle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius)
+{
+  const int32_t diameter = (radius * 2);
+
+  int32_t x = (radius - 1);
+  int32_t y = 0;
+  int32_t tx = 1;
+  int32_t ty = 1;
+  int32_t error = (tx - diameter);
+
+  while (x >= y)
+  {
+    //  Each of the following renders an octant of the circle
+    SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
+    SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
+    SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
+    SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
+    SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
+    SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
+    SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
+    SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
+
+    if (error <= 0)
+    {
+        ++y;
+        error += ty;
+        ty += 2;
+    }
+
+    if (error > 0)
+    {
+        --x;
+        tx += 2;
+        error += (tx - diameter);
+    }
+  }
+}
+
 void Game::DrawSprite(SpriteComponent *sprite)
 {
   Actor *actor{sprite->GetOwner()};
   SDL_Texture *texture{mTextureMap[sprite->GetName()]};
   SDL_Rect rect;
   SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h);
+
   rect.w *= mCameraScale;
   rect.h *= mCameraScale;
-  rect.x = actor->GetPosition().x - mCameraPosition.x - rect.w / 2.0f;
-  rect.y = actor->GetPosition().y - mCameraPosition.y - rect.h / 2.0f;
-  SDL_RenderCopyEx(mRenderer, texture, nullptr, &rect, 0.0, nullptr, SDL_FLIP_NONE);
+  rect.x = (actor->GetPosition().x - mCameraPosition.x) * mCameraScale - rect.w / 2.0f;
+  rect.y = (actor->GetPosition().y - mCameraPosition.y) * mCameraScale - rect.h / 2.0f;
+
+  Vector2 topLeft    {actor->GetPosition().x,          actor->GetPosition().y         };
+  Vector2 topRight   {actor->GetPosition().x + rect.w, actor->GetPosition().y         };
+  Vector2 bottomLeft {actor->GetPosition().x,          actor->GetPosition().y + rect.h};
+  Vector2 bottomRight{actor->GetPosition().x + rect.w, actor->GetPosition().y + rect.h};
+  
+  SDL_RenderCopyEx(mRenderer, texture, nullptr, &rect, -actor->GetAngle(), nullptr, SDL_FLIP_NONE);
 }
 
 void Game::Render()
 {
   SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0);
   SDL_RenderClear(mRenderer);
+  SDL_SetRenderDrawColor(mRenderer, 0, 0, 255, 0);
+  DrawCircle(mRenderer, -(mCameraPosition.x - mMoon->GetPosition().x) * mCameraScale, -(mCameraPosition.y - mMoon->GetPosition().y) * mCameraScale, 300.0f * mCameraScale);
+  DrawCircle(mRenderer, -mCameraPosition.x * mCameraScale, -mCameraPosition.y * mCameraScale, 2000.0f * mCameraScale);
   for (auto sprite : mSprites)
-  {
-    
     DrawSprite(sprite);
-  }
   SDL_RenderPresent(mRenderer);
 }
