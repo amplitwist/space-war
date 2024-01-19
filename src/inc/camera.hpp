@@ -20,7 +20,6 @@ public:
     position.y += mVerticalSpeed * deltaTime;
     SetPosition(position);
     GetGame()->SetCameraPosition(position);
-    std::cout << "(" << position.x << ", " << position.y << ")\n";
   }
 
   void VProcessInput(const u8 *keyStates)

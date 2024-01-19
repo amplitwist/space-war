@@ -17,6 +17,8 @@ add_executable(${PROJECT_NAME}
   src/star.cpp
   src/sprite_component.cpp
   src/camera.cpp
+  src/planet.cpp
+  src/orbit_component.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

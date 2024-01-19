@@ -4,6 +4,7 @@
 #include "inc/star.hpp"
 #include "inc/sprite_component.hpp"
 #include "inc/camera.hpp"
+#include "inc/planet.hpp"
 
 #include <SDL_image.h>
 
@@ -123,8 +124,13 @@ do { if (!(x)) return false; } while (0)
 bool Game::LoadData()
 {
   RETURN_IF_FALSE(LoadTexture("star.png"));
+  RETURN_IF_FALSE(LoadTexture("planet_1.png"));
+  RETURN_IF_FALSE(LoadTexture("planet_2.png"));
+  RETURN_IF_FALSE(LoadTexture("planet_3.png"));
+
   new Camera{this};
-  new Star{this};
+  Star *star{new Star{this}};
+  new Planet{this, star};
 
   return true;
 }
