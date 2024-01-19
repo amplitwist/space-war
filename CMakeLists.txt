@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(SDL2_DIR SDL2/cmake)
 find_package(SDL2 REQUIRED)
+set(SDL2_image_DIR SDL2_image/cmake)
+find_package(SDL2_image REQUIRED)
 
 add_executable(${PROJECT_NAME}
   src/main.cpp
@@ -14,9 +16,11 @@ add_executable(${PROJECT_NAME}
   src/component.cpp
   src/star.cpp
   src/sprite_component.cpp
+  src/camera.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   SDL2::SDL2
   SDL2::SDL2main
+  SDL2_image::SDL2_image
 )

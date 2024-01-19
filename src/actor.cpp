@@ -31,6 +31,8 @@ void Actor::ProcessInput(const u8 *keyStates)
 
   for (auto component : mComponents)
     component->ProcessInput(keyStates);
+
+  VProcessInput(keyStates);
 }
 
 void Actor::AddComponent(Component *component)

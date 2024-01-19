@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include "types.hpp"
+#include "vector2.hpp"
 
 #include <SDL.h>
 
@@ -31,6 +32,10 @@ public:
   void AddSprite(class SpriteComponent *sprite);
   void DrawSprite(class SpriteComponent *sprite);
 
+  void SetCameraPosition(Vector2 position) { mCameraPosition = position; }
+  f32 GetScale() const { return mCameraScale; }
+  void SetScale(f32 scale) { mCameraScale = scale; }
+
 private:
   bool LoadData();
   void UnloadData();
@@ -52,6 +57,9 @@ private:
 
   std::map<std::string, SDL_Texture*> mTextureMap;
   std::vector<class SpriteComponent*> mSprites;
+
+  Vector2 mCameraPosition;
+  f32 mCameraScale{1.0f};
 };
 
 #endif //GAME_HPP

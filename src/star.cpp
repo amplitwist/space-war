@@ -4,7 +4,7 @@
 Star::Star(class Game *game)
 : Actor{game}
 {
-  new SpriteComponent{this, "star.bmp", 150};
+  new SpriteComponent{this, "star.png", 150};
 }
 
 Star::~Star()

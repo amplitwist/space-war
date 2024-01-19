@@ -1,4 +1,6 @@
 .vscode
 build
 SDL2
+SDL2_image
 SDL2.dll
+SDL2_image.dll

@@ -32,6 +32,7 @@ public:
   void RemoveComponent(class Component *component);
 
   Vector2 GetPosition() const { return mPosition; }
+  void SetPosition(Vector2 position) { mPosition = position; }
 
 private:
   void UpdateComponents(f32 deltaTime);
@@ -45,7 +46,7 @@ private:
 
   std::vector<class Component*> mComponents;
 
-  Vector2 mPosition;
+  Vector2 mPosition{0.0f, 0.0f};
 };
 
 #endif //ACTOR_HPP
