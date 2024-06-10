@@ -1,15 +1,13 @@
-#include <SDL.h>
+#include "inc/states.hpp"
 
-#include "inc/game.hpp"
-
-int main(int argc, char *argv[])
+int main()
 {
-  Game game{std::filesystem::path(argv[0]).parent_path()};
+  System system;
 
-  if (game.Init())
-    game.Run();
+  if (system.Startup("Space War", 800, 600))
+    system.Run(std::make_unique<RaceSelectState>());
 
-  game.Deinit();
+  system.Cleanup();
 
   return 0;
 }

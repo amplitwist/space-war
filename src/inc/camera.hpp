@@ -1,41 +1,34 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include "actor.hpp"
-#include "game.hpp"
+#include "core.hpp"
 
-#include <SDL.h>
-
-#include <iostream>
-
-class Camera : public Actor
+class Camera
 {
 public:
-  Camera(Game *game) : Actor{game} {}
+  Camera(Core *core, const Vector2 &position, f32 scale);
 
-  void VUpdate(f32 deltaTime) override
-  {
-    Vector2 position{GetPosition()};
-    position.x += mHorizontalSpeed * deltaTime;
-    position.y += mVerticalSpeed * deltaTime;
-    SetPosition(position);
-    GetGame()->SetCameraPosition(position);
-  }
+  void Update(f32 dt);
 
-  void VProcessInput(const u8 *keyStates)
-  {
-    mVerticalSpeed = 0.0f;
-    mHorizontalSpeed = 0.0f;
+  Vector2 GetPosition(f32 frac) /*const*/;
+  f32 GetScale(f32 frac) const;
 
-    if (keyStates[SDL_SCANCODE_A]) mHorizontalSpeed -= 10.0f;
-    if (keyStates[SDL_SCANCODE_D]) mHorizontalSpeed += 10.0f;
-    if (keyStates[SDL_SCANCODE_W]) mVerticalSpeed   -= 10.0f;
-    if (keyStates[SDL_SCANCODE_S]) mVerticalSpeed   += 10.0f;
-  }
+  void SetPosition(const Vector2 &position);
+
+  Vector2 WorldToScreen(const Vector2 &position) const;
+  Vector2 ScreenToWorld(const Vector2 &position) const;
 
 private:
-  f32 mHorizontalSpeed{0.0f};
-  f32 mVerticalSpeed{0.0f};
+  Core *core_;
+
+  Vector2 last_position_;
+  Vector2 current_position_;
+
+  f32 last_scale_;
+  f32 current_scale_;
+
+  Vector2 mouse_position_screen_;
+  Vector2 mouse_position_world_;
 };
 
 #endif //CAMERA_HPP
