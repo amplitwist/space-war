@@ -3,6 +3,12 @@
 #include <cmath>
 #include <iostream>
 
+class Planet : public Actor
+{
+public:
+
+};
+
 MainState::MainState()
 {
 }
@@ -29,6 +35,8 @@ void MainState::Startup()
     Rect{120.0f, 490.0f, 100.0f, 100.0f},
     [] { std::cout << "mineral extractor button pressed\n"; }
   );
+
+  root_actor_.AppendSubnode(new Planet);
 }
 
 void MainState::Cleanup()

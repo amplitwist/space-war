@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 
+#include "actor.hpp"
 #include "core.hpp"
 #include "types.hpp"
 
@@ -23,6 +24,7 @@ public:
 protected:
   System *system_;
   Core *core_;
+  Actor root_actor_;
 };
 
 class System

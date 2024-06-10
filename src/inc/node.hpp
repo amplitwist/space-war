@@ -16,4 +16,14 @@ private:
   NodeBase *last_subnode_;
 };
 
+template<typename T>
+class Node : public NodeBase
+{
+public:
+  void AppendSubnode(T *node)
+  {
+    //NodeBase::AppendSubnode(static_cast<>);
+  }
+};
+
 #endif //NODE_HPP

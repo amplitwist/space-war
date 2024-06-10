@@ -1,9 +1,10 @@
 #ifndef ACTOR_HPP
 #define ACTOR_HPP
 
+#include "node.hpp"
 #include "vector2.hpp"
 
-class Actor
+class Actor : public Node<Actor>
 {
 public:
   Vector2 GetPosition(f32 frac);
